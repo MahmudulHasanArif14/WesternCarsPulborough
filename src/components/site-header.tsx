@@ -52,14 +52,7 @@ export function SiteHeader() {
           className="flex shrink-0 items-center gap-3 rounded-sm"
           aria-label={`${business.name} — home`}
         >
-          <Image
-            src="/logo.png"
-            alt=""
-            width={44}
-            height={44}
-            priority
-            className="h-11 w-11 shrink-0"
-          />
+          <Image src="/logo.png" alt="" width={44} height={44} priority />
           <span className="flex flex-col leading-none">
             <span className="text-lg font-bold tracking-tight">
               Western Cars
@@ -97,7 +90,10 @@ export function SiteHeader() {
             <PhoneIcon />
             {business.phone}
           </a>
-          <ButtonLink href={business.bookingUrl} className="hidden sm:inline-flex">
+          <ButtonLink
+            href={business.bookingUrl}
+            className="hidden sm:inline-flex"
+          >
             Book online
           </ButtonLink>
 
@@ -110,7 +106,11 @@ export function SiteHeader() {
             className="flex h-11 w-11 items-center justify-center rounded-sm border border-line text-ink transition-colors duration-150 ease-standard hover:border-accent hover:text-accent lg:hidden"
           >
             <span className="sr-only">{open ? "Close menu" : "Open menu"}</span>
-            <svg aria-hidden="true" viewBox="0 0 20 20" className="h-5 w-5 fill-current">
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 20 20"
+              className="h-5 w-5 fill-current"
+            >
               {open ? (
                 <path d="M5.3 4 4 5.3 8.7 10 4 14.7 5.3 16 10 11.3 14.7 16 16 14.7 11.3 10 16 5.3 14.7 4 10 8.7z" />
               ) : (
