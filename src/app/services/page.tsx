@@ -58,7 +58,7 @@ export default function ServicesPage() {
         const inGroup = services.filter((s) => s.group === group);
         if (inGroup.length === 0) return null;
         return (
-          <Section key={group} tint={i % 2 === 1}>
+          <Section key={group} ground={i % 2 === 1 ? "mist" : "white"}>
             <SectionHead title={group} lede={groupBlurbs[group]} />
             <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {inGroup.map((s) => (
@@ -86,7 +86,7 @@ export default function ServicesPage() {
           {[...new Set(allCategories)].map((c) => (
             <li
               key={c}
-              className="rounded-sm border border-line px-3 py-2 text-sm text-muted"
+              className="rounded-lg border border-line px-3 py-2 text-sm text-muted"
             >
               {c}
             </li>

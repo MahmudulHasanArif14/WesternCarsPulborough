@@ -2,57 +2,61 @@
 
 /* ─────────────────────────────────────────────────────────────
    Western Cars Pulborough — design tokens
-   Extracted token set. Do not introduce values outside this file.
+
+   Palette and scale follow the Western Cars house style: a primary
+   indigo-blue, a brighter accent blue for emphasis on dark grounds,
+   and a deep navy used for the footer and the full-bleed bands.
+   Do not introduce values outside this file.
    ───────────────────────────────────────────────────────────── */
 
 @theme {
-  /* Colors */
-  --color-ink: #0a0a0a; /* color-1 · text primary */
-  --color-muted: #737373; /* color-4 · text secondary */
-  --color-accent: #3d58a4; /* color-2 · accent (text-safe, 6.1:1 on white) */
-  --color-accent-bright: #1864dc; /* color-3 · accent (fills, 4.6:1 w/ white) */
-  --color-line: #d9d9d9; /* color-5 · border */
-  --color-surface: #ffffff; /* color-6 · text light / surface */
+  /* ── Colour ────────────────────────────────────────────────── */
+  --color-ink: #0a0a0a; /* body text */
+  --color-muted: #737373; /* secondary text */
+  --color-primary: #3d58a4; /* top bar, H2s, buttons, bands */
+  --color-accent: #1864dc; /* bright accent on dark grounds */
+  --color-navy: #141c34; /* footer + app band */
+  --color-mist: #d0d3dc; /* alternating section ground */
+  --color-line: #d9d9d9; /* borders, dividers */
+  --color-surface: #ffffff;
 
-  /* Typography */
-  --font-sans: var(--font-raleway), ui-sans-serif, system-ui, sans-serif;
+  /* Kept so older call sites keep resolving to the right role. */
+  --color-accent-bright: #1864dc;
 
-  --text-xs: 14px;
-  --text-xs--line-height: 20px;
-  --text-sm: 16px;
-  --text-sm--line-height: 24px;
-  --text-base: 18px;
-  --text-base--line-height: 28px;
-  --text-lg: 24px;
-  --text-lg--line-height: 32px;
-  --text-xl: 36px;
-  --text-xl--line-height: 40px;
-  --text-2xl: 48px;
-  --text-2xl--line-height: 48px;
+  /* ── Typography ────────────────────────────────────────────── */
+  --font-sans: var(--font-raleway), -apple-system, BlinkMacSystemFont,
+    sans-serif;
 
-  /* Spacing — 8px base grid */
-  --spacing-1: 4px;
-  --spacing-2: 8px;
-  --spacing-3: 12px;
-  --spacing-4: 16px;
-  --spacing-5: 20px;
-  --spacing-6: 24px;
-  --spacing-7: 32px;
-  --spacing-8: 40px;
-  --spacing-9: 56px;
-  --spacing-10: 64px;
-  --spacing-11: 99px;
-  --spacing-12: 584px;
+  --text-xs: 12px;
+  --text-xs--line-height: 16px;
+  --text-sm: 14px;
+  --text-sm--line-height: 20px;
+  --text-base: 16px;
+  --text-base--line-height: 24px;
+  --text-lg: 18px;
+  --text-lg--line-height: 28px;
+  --text-xl: 20px;
+  --text-xl--line-height: 28px;
+  --text-2xl: 24px;
+  --text-2xl--line-height: 32px;
+  --text-3xl: 30px;
+  --text-3xl--line-height: 36px;
+  --text-4xl: 36px;
+  --text-4xl--line-height: 40px;
+  --text-5xl: 48px;
+  --text-5xl--line-height: 1.1;
 
-  /* Shape — single radius, pinned */
+  /* ── Shape ─────────────────────────────────────────────────── */
   --radius-sm: 4px;
+  --radius-btn: 6px;
+  --radius-lg: 8px;
 
-  /* Elevation */
-  --shadow-sm:
-    rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px,
-    rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px;
+  /* ── Elevation ─────────────────────────────────────────────── */
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 8px 10px -1px rgb(0 0 0 / 0.1);
 
-  /* Motion */
+  /* ── Motion ────────────────────────────────────────────────── */
   --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -85,12 +89,11 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-accent-bright);
+    outline: 2px solid var(--color-accent);
     outline-offset: 2px;
     border-radius: var(--radius-sm);
   }
 
-  /* Headings carry the display weights from the scale. */
   h1,
   h2,
   h3,
@@ -104,7 +107,7 @@
     text-wrap: pretty;
   }
 
-  /* No zoom-on-focus for form controls on iOS (base is already 18px). */
+  /* 16px base keeps iOS from zooming form controls on focus. */
   input,
   select,
   textarea {
@@ -114,16 +117,19 @@
 }
 
 @layer components {
+  /* The one content measure: 1280px, 16px gutters. */
   .container-page {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1280px;
     margin-inline: auto;
-    padding-inline: var(--spacing-4);
+    padding-inline: var(--spacing-4, 16px);
   }
 
-  @media (min-width: 768px) {
-    .container-page {
-      padding-inline: var(--spacing-7);
-    }
+  /* A narrower measure for long-form prose columns. */
+  .container-prose {
+    width: 100%;
+    max-width: 896px;
+    margin-inline: auto;
+    padding-inline: var(--spacing-4, 16px);
   }
 }

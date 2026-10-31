@@ -1,0 +1,63 @@
+{
+ "/": [],
+ "/about-us": [],
+ "/airport-transfers": [],
+ "/horsham-to-gatwick-transfers": [
+  {
+   "q": "How much is the taxi fare from Billingshurst to Gatwick Airport?",
+   "ans": [
+    {
+     "cls": "px-5 pb-4 text-sm leading-relaxed border-t border-border",
+     "txt": "This will vary according to when you're departing and the sort of vehicle you need. Contact us for a tailored quote for your trip today."
+    }
+   ],
+   "boxCls": "border border-border rounded-lg overflow-hidden"
+  },
+  {
+   "q": "Can I book a taxi in advance for a Billingshurst to Gatwick Airport journey?",
+   "ans": [
+    {
+     "cls": "px-5 pb-4 text-sm leading-relaxed border-t border-border",
+     "txt": "Yes, you can! We recommend pre-booking your Gatwick Airport transfer from Billingshurst once you know you are travelling. This gives you one less thing to think about and makes the whole process of going away less stressful. Pre-book via our contact form, app, or phone."
+    }
+   ],
+   "boxCls": "border border-border rounded-lg overflow-hidden"
+  },
+  {
+   "q": "How many passengers and luggage can a Western Cars taxi accommodate?",
+   "ans": [
+    {
+     "cls": "px-5 pb-4 text-sm leading-relaxed border-t border-border",
+     "txt": "Our fleet includes saloon cars, estate cars, MPVs and minibuses, so we can help however many of you are travelling. Once we know the size of your party, we will work out the right vehicle or vehicles to send."
+    }
+   ],
+   "boxCls": "border border-border rounded-lg overflow-hidden"
+  },
+  {
+   "q": "Do you cover both Gatwick North and South terminals?",
+   "ans": [
+    {
+     "cls": "px-5 pb-4 text-sm leading-relaxed border-t border-border",
+     "txt": "Yes — we cover both Gatwick North Terminal and South Terminal. Just let us know your terminal when booking and your driver will be there to meet you."
+    }
+   ],
+   "boxCls": "border border-border rounded-lg overflow-hidden"
+  },
+  {
+   "q": "Any tips for a smooth taxi ride from Billingshurst to Gatwick Airport?",
+   "ans": [
+    {
+     "cls": "px-5 pb-4 text-sm leading-relaxed border-t border-border",
+     "txt": "We suggest making your booking as soon as you can, double-checking your flight details, being ready at pick-up time with your belongings, and having your travel documents to hand. This preparation should result in a smoother, stress-free journey."
+    }
+   ],
+   "boxCls": "border border-border rounded-lg overflow-hidden"
+  }
+ ],
+ "/luton-airport-transfer": [],
+ "/stansted-airport-transfers": [],
+ "/western-cars-airport-transfers-billinghurst": [],
+ "/southampton-seaport-transfers": [],
+ "/contact-us": [],
+ "/terms-conditions": []
+}

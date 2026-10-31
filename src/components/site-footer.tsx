@@ -1,134 +1,137 @@
-import Image from "next/image";
 import Link from "next/link";
-import { areas, business, copyrightYear, services } from "@/lib/business";
+import { business, copyrightYear, services } from "@/lib/business";
 import { MailIcon, PhoneIcon, WhatsAppIcon } from "./ui";
 
-const company = [
-  { href: "/about", label: "About us" },
-  { href: "/areas", label: "Areas we cover" },
-  { href: "/fleet", label: "Our fleet" },
+/* ─────────────────────────────────────────────────────────────
+   SiteFooter — navy, three columns: about · quick links · contact,
+   closed by a thin copyright rule.
+   ───────────────────────────────────────────────────────────── */
+
+const quickLinks = [
+  { href: business.bookingUrl, label: "Book Now", external: true },
+  { href: "/services", label: "Our Taxi Services" },
+  { href: "/services/airport-transfers", label: "Airport Transfers" },
+  { href: "/areas/pulborough", label: "Pulborough Taxis" },
+  { href: "/areas", label: "Areas We Cover" },
+  { href: "/fleet", label: "Our Fleet" },
+  { href: "/book", label: "Get a Quote" },
   { href: "/contact", label: "Contact" },
-  { href: "/book", label: "Get a quote" },
 ];
+
+function FooterHeading({ children }: { children: React.ReactNode }) {
+  return (
+    <h2 className="mb-4 text-base font-bold tracking-wide text-surface uppercase">
+      {children}
+    </h2>
+  );
+}
 
 export function SiteFooter() {
   return (
-    <footer className="mt-auto border-t border-line bg-[#fafafa]">
-      <div className="container-page py-9 md:py-10">
-        <div className="grid gap-9 md:grid-cols-2 lg:grid-cols-4">
-          <div>
-            <Image
-              src="/logo.png"
-              alt=""
-              width={56}
-              height={56}
-              className="mb-4 h-14 w-14"
-            />
-            <p className="text-lg font-bold">{business.name}</p>
-            <p className="mt-1 text-sm text-muted">{business.tagline}</p>
-            <p className="mt-4 text-sm text-muted">
-              Licensed taxi and private hire across the whole of {business.region}
-              — not just {business.base}. Available {business.hours}.
-            </p>
-
-            <ul className="mt-6 grid gap-3">
-              <li>
-                <a
-                  href={business.phoneHref}
-                  className="flex items-center gap-3 rounded-sm text-base font-semibold text-ink transition-colors duration-150 ease-standard hover:text-accent"
-                >
-                  <PhoneIcon className="text-accent" />
-                  {business.phone}
-                </a>
-              </li>
-              <li>
-                <a
-                  href={business.whatsappHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 rounded-sm text-sm text-ink transition-colors duration-150 ease-standard hover:text-accent"
-                >
-                  <WhatsAppIcon className="text-accent" />
-                  {business.whatsapp}
-                  <span className="sr-only">(opens WhatsApp)</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href={business.emailHref}
-                  className="flex items-center gap-3 rounded-sm text-sm break-all text-ink transition-colors duration-150 ease-standard hover:text-accent"
-                >
-                  <MailIcon className="shrink-0 text-accent" />
-                  {business.email}
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <nav aria-labelledby="footer-services">
-            <p
-              id="footer-services"
-              className="text-xs font-semibold tracking-[0.08em] text-muted"
-            >
-              SERVICES
-            </p>
-            <ul className="mt-4 grid gap-2">
-              {services.map((s) => (
-                <li key={s.slug}>
-                  <Link
-                    href={`/services/${s.slug}`}
-                    className="rounded-sm text-sm text-ink transition-colors duration-150 ease-standard hover:text-accent"
-                  >
-                    {s.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          <nav aria-labelledby="footer-company">
-            <p
-              id="footer-company"
-              className="text-xs font-semibold tracking-[0.08em] text-muted"
-            >
-              COMPANY
-            </p>
-            <ul className="mt-4 grid gap-2">
-              {company.map((c) => (
-                <li key={c.href}>
-                  <Link
-                    href={c.href}
-                    className="rounded-sm text-sm text-ink transition-colors duration-150 ease-standard hover:text-accent"
-                  >
-                    {c.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          <div>
-            <p className="text-xs font-semibold tracking-[0.08em] text-muted">
-              AREAS WE COVER
-            </p>
-            <p className="mt-4 text-sm text-muted">
-              {areas.slice(0, 14).join(" · ")} and every town and village in between.
-            </p>
-            <Link
-              href="/areas"
-              className="mt-4 inline-block rounded-sm text-sm font-semibold text-accent transition-colors duration-150 ease-standard hover:text-accent-bright"
-            >
-              See full coverage
-            </Link>
-          </div>
+    <footer className="mt-auto bg-navy text-surface">
+      <div className="container-page grid grid-cols-1 gap-8 py-12 md:grid-cols-3">
+        <div>
+          <FooterHeading>About Western Cars</FooterHeading>
+          <p className="text-sm leading-relaxed opacity-80">
+            {business.name} provides licensed taxi and private hire across the
+            whole of {business.region} — not just {business.base}. Specialising
+            in fixed-price airport transfers to Gatwick, Heathrow, Luton,
+            Stansted and Southampton, alongside local journeys, minibus and
+            group travel, wheelchair accessible vehicles, executive cars and
+            wedding hire. Available {business.hours}.
+          </p>
         </div>
 
-        <div className="mt-9 flex flex-col gap-3 border-t border-line pt-6 text-xs text-muted md:flex-row md:items-center md:justify-between">
-          <p>
-            &copy; {copyrightYear} {business.name}. All rights
-            reserved.
+        <nav aria-label="Quick links">
+          <FooterHeading>Quick Links</FooterHeading>
+          <ul className="space-y-2 text-sm opacity-80">
+            {quickLinks.map((l) =>
+              l.external ? (
+                <li key={l.label}>
+                  <a
+                    href={l.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-sm transition-opacity duration-150 ease-standard hover:opacity-100 hover:underline"
+                  >
+                    {l.label}
+                  </a>
+                </li>
+              ) : (
+                <li key={l.href}>
+                  <Link
+                    href={l.href}
+                    className="rounded-sm transition-opacity duration-150 ease-standard hover:opacity-100 hover:underline"
+                  >
+                    {l.label}
+                  </Link>
+                </li>
+              ),
+            )}
+          </ul>
+        </nav>
+
+        <div>
+          <FooterHeading>Contact Us</FooterHeading>
+          <address className="space-y-2 text-sm not-italic opacity-80">
+            <div className="flex items-center gap-2">
+              <PhoneIcon className="h-4 w-4 shrink-0" />
+              <a
+                href={business.phoneHref}
+                className="rounded-sm transition-opacity duration-150 ease-standard hover:opacity-100 hover:underline"
+              >
+                T: {business.phone}
+              </a>
+            </div>
+            <div className="flex items-center gap-2">
+              <WhatsAppIcon className="h-4 w-4 shrink-0" />
+              <a
+                href={business.whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-sm transition-opacity duration-150 ease-standard hover:opacity-100 hover:underline"
+              >
+                WhatsApp: {business.whatsapp}
+              </a>
+            </div>
+            <div className="flex items-start gap-2">
+              <MailIcon className="mt-0.5 h-4 w-4 shrink-0" />
+              <a
+                href={business.emailHref}
+                className="rounded-sm break-all transition-opacity duration-150 ease-standard hover:opacity-100 hover:underline"
+              >
+                E: {business.email}
+              </a>
+            </div>
+          </address>
+
+          <p className="mt-4 text-sm opacity-80">
+            {business.base}, {business.addressRegion} · Open {business.hours}
           </p>
-          <p>Licensed private hire operator · Covering all of {business.region}</p>
+        </div>
+      </div>
+
+      {/* Service index — flat links, kept crawlable without a fourth column. */}
+      <div className="container-page border-t border-primary/40 py-6">
+        <h2 className="sr-only">All services</h2>
+        <ul className="flex flex-wrap gap-x-4 gap-y-2 text-xs opacity-70">
+          {services.map((s) => (
+            <li key={s.slug}>
+              <Link
+                href={`/services/${s.slug}`}
+                className="rounded-sm transition-opacity duration-150 ease-standard hover:opacity-100 hover:underline"
+              >
+                {s.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="border-t border-primary/40 py-4 text-center text-xs opacity-70">
+        <div className="container-page">
+          &copy; Copyright {copyrightYear} – {business.legalName}. Licensed
+          private hire operator covering {business.region}.
         </div>
       </div>
     </footer>
@@ -149,7 +152,7 @@ export function MobileContactBar() {
       >
         <a
           href={business.phoneHref}
-          className="flex min-h-[48px] items-center justify-center gap-2 rounded-sm bg-accent-bright px-4 text-sm font-semibold text-surface transition-colors duration-150 ease-standard hover:bg-accent active:bg-accent"
+          className="flex min-h-[48px] items-center justify-center gap-2 rounded-btn bg-primary px-4 text-sm font-bold text-surface transition-opacity duration-150 ease-standard hover:opacity-90"
         >
           <PhoneIcon />
           Call now
@@ -158,7 +161,7 @@ export function MobileContactBar() {
           href={business.whatsappHref}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex min-h-[48px] items-center justify-center gap-2 rounded-sm border border-accent px-4 text-sm font-semibold text-accent transition-colors duration-150 ease-standard hover:bg-accent hover:text-surface"
+          className="flex min-h-[48px] items-center justify-center gap-2 rounded-btn border-2 border-primary px-4 text-sm font-bold text-primary transition-colors duration-150 ease-standard hover:bg-primary hover:text-surface"
         >
           <WhatsAppIcon />
           WhatsApp

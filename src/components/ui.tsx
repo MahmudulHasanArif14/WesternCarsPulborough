@@ -6,33 +6,40 @@ import { photos, type PhotoKey } from "@/lib/photos";
 /* ─────────────────────────────────────────────────────────────
    Button / ButtonLink
    Intent: the single interactive affordance for every CTA.
-   Tokens: color-accent-bright, color-surface, color-ink, color-line,
-           radius-sm, spacing-3/4/6, text-sm/base, ease-standard.
+   Variants map to the three grounds the site uses — white, the
+   primary band, and the navy band.
+   Tokens: color-primary, color-accent, color-surface, color-line,
+           radius-btn, text-sm, ease-standard.
    States: default, hover, focus-visible, active, disabled.
    ───────────────────────────────────────────────────────────── */
 
-type Variant = "primary" | "secondary" | "ghost";
+type Variant =
+  | "primary" // solid primary on a light ground
+  | "accent" // solid bright blue, for the home hero
+  | "outline" // white fill, 2px primary border
+  | "onBand"; // white fill, primary text — for use on primary/navy
+
 type Size = "md" | "lg";
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-sm font-semibold " +
+  "inline-flex items-center justify-center gap-2 rounded-btn font-bold " +
   "transition-[color,background-color,border-color,opacity] duration-150 ease-standard " +
   "disabled:pointer-events-none disabled:opacity-50 select-none text-center";
 
 const variants: Record<Variant, string> = {
   primary:
-    "bg-accent-bright text-surface hover:bg-accent active:bg-accent " +
-    "border border-transparent",
-  secondary:
-    "bg-surface text-accent border border-accent hover:bg-accent hover:text-surface " +
-    "active:bg-accent active:text-surface",
-  ghost:
-    "bg-transparent text-ink border border-line hover:border-accent hover:text-accent",
+    "bg-primary text-surface border-2 border-primary hover:opacity-90 active:opacity-80",
+  accent:
+    "bg-accent text-surface border-2 border-accent hover:opacity-90 active:opacity-80",
+  outline:
+    "bg-surface text-primary border-2 border-primary hover:bg-primary hover:text-surface",
+  onBand:
+    "bg-surface text-primary border-2 border-surface hover:opacity-90 active:opacity-80",
 };
 
 const sizes: Record<Size, string> = {
-  md: "px-4 py-3 text-sm min-h-[44px]",
-  lg: "px-6 py-4 text-base min-h-[56px]",
+  md: "px-6 py-3 text-sm min-h-[44px]",
+  lg: "px-8 py-4 text-base min-h-[52px]",
 };
 
 function cls(variant: Variant, size: Size, className?: string) {
@@ -104,8 +111,9 @@ export function BookNowIcon({ className }: { className?: string }) {
 }
 
 /**
- * The standard CTA row. `tone="onDark"` is for use over a photo hero, where
- * the secondary button needs a light outline instead of the accent one.
+ * The standard CTA row. `tone="onBand"` is for the primary/navy bands and
+ * the photo heroes, where a bordered white button reads better than an
+ * outlined primary one.
  */
 export function CtaGroup({
   bookingUrl,
@@ -122,23 +130,28 @@ export function CtaGroup({
   tone?: "onLight" | "onDark";
   className?: string;
 }) {
+  const onDark = tone === "onDark";
   return (
     <div
       className={["flex flex-col gap-3 sm:flex-row", className]
         .filter(Boolean)
         .join(" ")}
     >
-      <ButtonLink href={bookingUrl} size={size}>
+      <ButtonLink
+        href={bookingUrl}
+        size={size}
+        variant={onDark ? "accent" : "primary"}
+      >
         <BookNowIcon />
-        Book online
+        Book Online
       </ButtonLink>
       <ButtonLink
         href={phoneHref}
         size={size}
-        variant={tone === "onDark" ? "ghost" : "secondary"}
+        variant={onDark ? "onBand" : "outline"}
         className={
-          tone === "onDark"
-            ? "border-surface/40 bg-transparent text-surface hover:border-surface hover:bg-surface hover:text-ink"
+          onDark
+            ? "border-surface bg-transparent text-surface hover:bg-surface hover:text-primary hover:opacity-100"
             : undefined
         }
       >
@@ -150,28 +163,63 @@ export function CtaGroup({
 }
 
 /* ─────────────────────────────────────────────────────────────
-   Section — vertical rhythm on the 8px grid
+   Section — the page rhythm. Sections alternate white and `mist`,
+   with `navy` and `primary` reserved for the full-bleed bands.
    ───────────────────────────────────────────────────────────── */
+
+const grounds = {
+  white: "bg-surface",
+  mist: "bg-mist",
+  navy: "bg-navy text-surface",
+  primary: "bg-primary text-surface",
+} as const;
 
 export function Section({
   children,
   className,
-  tint,
+  ground = "white",
+  width = "page",
   ...props
-}: ComponentProps<"section"> & { tint?: boolean }) {
+}: Omit<ComponentProps<"section">, "ground"> & {
+  ground?: keyof typeof grounds;
+  width?: "page" | "prose";
+}) {
   return (
     <section
-      className={[
-        "py-9 md:py-10",
-        tint ? "bg-[#fafafa] border-y border-line" : "",
-        className,
-      ]
+      className={["py-14", grounds[ground], className]
         .filter(Boolean)
         .join(" ")}
       {...props}
     >
-      <div className="container-page">{children}</div>
+      <div className={width === "prose" ? "container-prose" : "container-page"}>
+        {children}
+      </div>
     </section>
+  );
+}
+
+/**
+ * The underline that sits beneath every centred section title. On the dark
+ * bands it switches to white so it stays visible.
+ */
+export function HeadingDivider({
+  tone = "primary",
+  align = "center",
+}: {
+  tone?: "primary" | "light";
+  align?: "left" | "center";
+}) {
+  return (
+    <div
+      aria-hidden="true"
+      className={[
+        "mt-4 h-1 w-20 rounded-sm",
+        tone === "light" ? "bg-surface" : "bg-primary",
+        align === "center" ? "mx-auto" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    />
   );
 }
 
@@ -179,37 +227,67 @@ export function SectionHead({
   eyebrow,
   title,
   lede,
-  align = "left",
+  align = "center",
+  tone = "dark",
   as: As = "h2",
+  divider = true,
 }: {
+  /** Italic strapline under the title, as the house style sets it. */
   eyebrow?: string;
   title: string;
   lede?: string;
   align?: "left" | "center";
+  tone?: "dark" | "light";
   as?: "h1" | "h2";
+  divider?: boolean;
 }) {
+  const centred = align === "center";
   return (
     <div
       className={[
-        "max-w-[720px]",
-        align === "center" ? "mx-auto text-center" : "",
-      ].join(" ")}
+        "max-w-3xl",
+        centred ? "mx-auto text-center" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
     >
-      {eyebrow ? (
-        <p className="mb-2 text-xs font-semibold tracking-[0.08em] text-accent">
-          {eyebrow}
-        </p>
-      ) : null}
       <As
-        className={
+        className={[
+          "font-bold",
           As === "h1"
-            ? "text-xl md:text-2xl font-bold"
-            : "text-lg md:text-xl font-bold"
-        }
+            ? "text-3xl md:text-5xl"
+            : "text-2xl md:text-3xl",
+          tone === "light" ? "text-surface" : "text-ink",
+        ].join(" ")}
       >
         {title}
       </As>
-      {lede ? <p className="mt-4 text-base text-muted">{lede}</p> : null}
+      {eyebrow ? (
+        <p
+          className={[
+            "mt-2 text-lg italic",
+            tone === "light" ? "text-surface/80" : "text-muted",
+          ].join(" ")}
+        >
+          {eyebrow}
+        </p>
+      ) : null}
+      {divider ? (
+        <HeadingDivider
+          tone={tone === "light" ? "light" : "primary"}
+          align={align}
+        />
+      ) : null}
+      {lede ? (
+        <p
+          className={[
+            "mt-5 text-sm leading-relaxed",
+            tone === "light" ? "text-surface/90" : "text-muted",
+          ].join(" ")}
+        >
+          {lede}
+        </p>
+      ) : null}
     </div>
   );
 }
@@ -227,11 +305,12 @@ export function Breadcrumbs({
 }) {
   const muted = tone === "light" ? "text-surface/70" : "text-muted";
   const current = tone === "light" ? "text-surface" : "text-ink";
-  const hover =
-    tone === "light" ? "hover:text-surface" : "hover:text-accent";
+  const hover = tone === "light" ? "hover:text-surface" : "hover:text-primary";
   return (
-    <nav aria-label="Breadcrumb" className="mb-6">
-      <ol className={`flex flex-wrap items-center gap-2 text-xs ${muted}`}>
+    <nav aria-label="Breadcrumb">
+      <ol
+        className={`flex flex-wrap items-center justify-center gap-2 text-xs ${muted}`}
+      >
         {trail.map((item, i) => (
           <li key={item.path} className="flex items-center gap-2">
             {i > 0 ? (
@@ -262,8 +341,6 @@ export function Breadcrumbs({
    Figure — a registry photo at a fixed aspect ratio.
    Intent: one place that decides how photography is cropped, rounded
    and loaded, so no page hand-rolls an <img>.
-   Tokens: radius-sm, color-line, color-ink (scrim), ease-standard.
-   States: loading (blur-free fade), loaded, decorative vs. captioned.
    ───────────────────────────────────────────────────────────── */
 
 const ratios = {
@@ -298,9 +375,9 @@ export function Figure({
   return (
     <div
       className={[
-        "relative overflow-hidden bg-[#fafafa]",
+        "relative overflow-hidden bg-mist",
         ratios[ratio],
-        rounded ? "rounded-sm border border-line" : "",
+        rounded ? "rounded-lg shadow-lg" : "",
         className,
       ]
         .filter(Boolean)
@@ -330,7 +407,10 @@ export function Figure({
 }
 
 /* ─────────────────────────────────────────────────────────────
-   PageHero — the banner every inner page opens with, plus breadcrumbs
+   PageHero — the banner every inner page opens with.
+   With a photo: a tall centred band over a darkened image.
+   Without: a flat primary band, as the house style uses on the
+   text-only pages (contact, about, terms).
    ───────────────────────────────────────────────────────────── */
 
 export function PageHero({
@@ -345,85 +425,69 @@ export function PageHero({
   title: string;
   lede?: string;
   trail?: { name: string; path: string }[];
-  /** Optional background photograph, darkened so the text stays AA-legible. */
   photo?: PhotoKey;
   children?: ReactNode;
 }) {
+  const inner = (
+    <div className="relative z-10 container-page text-center text-surface">
+      {trail && trail.length > 0 ? (
+        <div className="mb-5">
+          <Breadcrumbs trail={trail} tone="light" />
+        </div>
+      ) : null}
+      {eyebrow ? (
+        <p className="mb-3 text-sm font-semibold tracking-[0.12em] text-surface/80 uppercase">
+          {eyebrow}
+        </p>
+      ) : null}
+      {/* text-surface is explicit: the base layer pins h1 to --color-ink,
+          which would otherwise win over the inherited light colour. */}
+      <h1 className="mx-auto max-w-4xl text-3xl font-bold text-surface md:text-5xl">
+        {title}
+      </h1>
+      {lede ? (
+        <p className="mx-auto mt-4 max-w-xl text-base text-surface/90">
+          {lede}
+        </p>
+      ) : null}
+      {children ? (
+        <div className="mt-7 flex justify-center">{children}</div>
+      ) : null}
+    </div>
+  );
+
   if (photo) {
     return (
-      <div className="relative isolate border-b border-line bg-ink">
+      <div className="relative isolate flex min-h-72 items-center overflow-hidden bg-navy py-16 md:min-h-96">
         <Image
           src={photos[photo].src}
           alt=""
           fill
           priority
           sizes="100vw"
-          className="object-cover opacity-60"
+          className="object-cover"
         />
-        {/* Two scrims: a vertical one so the photo still reads at the edges,
-            and a left-weighted one that guarantees AA contrast under the text. */}
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/75 to-ink/35"
+          className="absolute inset-0 bg-gradient-to-b from-ink/70 to-ink/85"
         />
-        <div className="relative container-page py-9 text-surface md:py-10">
-          {trail && trail.length > 0 ? (
-            <Breadcrumbs trail={trail} tone="light" />
-          ) : null}
-          {eyebrow ? (
-            <p className="mb-2 text-xs font-semibold tracking-[0.08em] text-surface/80">
-              {eyebrow}
-            </p>
-          ) : null}
-          {/* text-surface is explicit: the base layer pins h1 to --color-ink,
-              which would otherwise win over the inherited light colour. */}
-          <h1 className="max-w-[820px] text-xl font-bold text-surface md:text-2xl">
-            {title}
-          </h1>
-          {lede ? (
-            <p className="mt-4 max-w-[680px] text-base text-surface/90">
-              {lede}
-            </p>
-          ) : null}
-          {children ? <div className="mt-7">{children}</div> : null}
-        </div>
+        {inner}
       </div>
     );
   }
 
-  return (
-    <div className="border-b border-line bg-[#fafafa]">
-      <div className="container-page py-9 md:py-10">
-        {trail && trail.length > 0 ? <Breadcrumbs trail={trail} /> : null}
-
-        {eyebrow ? (
-          <p className="mb-2 text-xs font-semibold tracking-[0.08em] text-accent">
-            {eyebrow}
-          </p>
-        ) : null}
-        <h1 className="max-w-[820px] text-xl font-bold md:text-2xl">{title}</h1>
-        {lede ? (
-          <p className="mt-4 max-w-[680px] text-base text-muted">{lede}</p>
-        ) : null}
-        {children ? <div className="mt-7">{children}</div> : null}
-      </div>
-    </div>
-  );
+  return <div className="bg-primary py-12 md:py-16">{inner}</div>;
 }
 
 /* ─────────────────────────────────────────────────────────────
-   Card — one radius, one border, hover lift on pointer devices
+   Card / CardLink / InfoCard
    ───────────────────────────────────────────────────────────── */
 
-export function Card({
-  children,
-  className,
-  ...props
-}: ComponentProps<"div">) {
+export function Card({ children, className, ...props }: ComponentProps<"div">) {
   return (
     <div
       className={[
-        "rounded-sm border border-line bg-surface p-6",
+        "rounded-lg border border-line bg-surface p-6 shadow-sm",
         className,
       ]
         .filter(Boolean)
@@ -450,13 +514,15 @@ export function CardLink({
   return (
     <Link
       href={href}
-      className="group flex h-full flex-col rounded-sm border border-line bg-surface p-6
-                 transition-[border-color,box-shadow] duration-150 ease-standard
-                 hover:border-accent hover:shadow-sm"
+      className="group flex h-full flex-col rounded-lg border border-line bg-surface p-6 shadow-sm
+                 transition-[border-color,box-shadow,transform] duration-150 ease-standard
+                 hover:-translate-y-0.5 hover:border-primary hover:shadow-lg"
     >
-      <h3 className="text-lg font-semibold">{title}</h3>
-      <p className="mt-3 flex-1 text-sm text-muted">{children}</p>
-      <span className="mt-6 text-sm font-semibold text-accent">
+      <h3 className="text-lg font-bold">{title}</h3>
+      <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">
+        {children}
+      </p>
+      <span className="mt-6 text-sm font-bold text-primary">
         {cta}
         <span
           aria-hidden="true"
@@ -466,6 +532,227 @@ export function CardLink({
         </span>
       </span>
     </Link>
+  );
+}
+
+/**
+ * A small white card with a primary dot — used for the "what's included"
+ * grids on the service and airport pages.
+ */
+export function InfoCard({
+  title,
+  children,
+}: {
+  title: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="rounded-lg border border-line bg-surface p-5 shadow-sm">
+      <div className="flex items-start gap-3">
+        <span
+          aria-hidden="true"
+          className="mt-2 h-2 w-2 shrink-0 rounded-full bg-primary"
+        />
+        <div>
+          <p className="text-sm font-bold">{title}</p>
+          <p className="mt-1 text-sm leading-relaxed text-muted">{children}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Icon tile + heading + copy. The "Why Choose Us" pattern, also used on
+ * the service pages for the three-point summaries.
+ */
+export function FeatureRow({
+  icon,
+  title,
+  children,
+  tone = "dark",
+}: {
+  icon: ReactNode;
+  title: string;
+  children: ReactNode;
+  tone?: "dark" | "light";
+}) {
+  return (
+    <div className="flex items-start gap-4">
+      <div
+        className={[
+          "flex h-14 w-14 shrink-0 items-center justify-center rounded-lg",
+          tone === "light" ? "bg-surface/15 text-surface" : "bg-primary text-surface",
+        ].join(" ")}
+      >
+        {icon}
+      </div>
+      <div>
+        <h3
+          className={[
+            "text-base font-bold",
+            tone === "light" ? "text-surface" : "text-ink",
+          ].join(" ")}
+        >
+          {title}
+        </h3>
+        <p
+          className={[
+            "mt-1 text-sm leading-relaxed",
+            tone === "light" ? "text-surface/80" : "text-muted",
+          ].join(" ")}
+        >
+          {children}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────
+   CTABand — the primary-blue closer that ends every inner page
+   ───────────────────────────────────────────────────────────── */
+
+export function CTABand({
+  title,
+  children,
+  actions,
+}: {
+  title: string;
+  children?: ReactNode;
+  actions: ReactNode;
+}) {
+  return (
+    <section className="bg-primary py-14 text-surface">
+      <div className="container-page text-center">
+        <h2 className="text-2xl font-bold text-surface md:text-3xl">{title}</h2>
+        {children ? (
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-surface/90">
+            {children}
+          </p>
+        ) : null}
+        <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          {actions}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────
+   FAQ accordion — native <details>, so every answer stays in the
+   HTML for crawlers even while visually collapsed.
+   ───────────────────────────────────────────────────────────── */
+
+export function FAQAccordion({
+  items,
+  className,
+}: {
+  items: readonly { q: string; a: string }[];
+  className?: string;
+}) {
+  return (
+    <div
+      className={["divide-y divide-line overflow-hidden rounded-lg border border-line bg-surface", className]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      {items.map((f) => (
+        <details key={f.q} className="group">
+          <summary className="flex w-full cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 text-left text-sm font-bold transition-colors duration-150 ease-standard marker:content-none hover:bg-mist/40">
+            {f.q}
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-4 w-4 shrink-0 text-primary transition-transform duration-150 ease-standard group-open:rotate-180"
+            >
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </summary>
+          <p className="border-t border-line px-5 py-4 text-sm leading-relaxed text-muted">
+            {f.a}
+          </p>
+        </details>
+      ))}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────
+   AppBadges — links to the iCabbi app listing.
+   Drawn rather than bitmapped, so they stay sharp and carry no
+   third-party asset we are not licensed to host.
+   ───────────────────────────────────────────────────────────── */
+
+function StoreBadge({
+  kicker,
+  name,
+  icon,
+}: {
+  kicker: string;
+  name: string;
+  icon: ReactNode;
+}) {
+  return (
+    <span className="inline-flex h-12 items-center gap-3 rounded-lg border border-surface/30 bg-ink/80 px-4 text-surface transition-colors duration-150 ease-standard group-hover:border-surface/70">
+      {icon}
+      <span className="flex flex-col leading-none">
+        <span className="text-[10px] opacity-80">{kicker}</span>
+        <span className="mt-0.5 text-sm font-bold">{name}</span>
+      </span>
+    </span>
+  );
+}
+
+export function AppBadges({
+  appUrl,
+  className,
+}: {
+  appUrl: string;
+  className?: string;
+}) {
+  return (
+    <div className={["flex flex-wrap gap-3", className].filter(Boolean).join(" ")}>
+      <a
+        href={appUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group rounded-lg"
+      >
+        <span className="sr-only">Get the booking app on Google Play</span>
+        <StoreBadge
+          kicker="GET IT ON"
+          name="Google Play"
+          icon={
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-6 w-6 fill-current">
+              <path d="M3.6 2.3a1 1 0 0 0-.4.8v17.8a1 1 0 0 0 .4.8l10-9.7zm11.1 8.3 2.9-2.8-9.8-5.6zm0 2.8-6.9 8.4 9.8-5.6zm1.4-1.4 3.2-3a1 1 0 0 1 0 1.7z" />
+            </svg>
+          }
+        />
+      </a>
+      <a
+        href={appUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group rounded-lg"
+      >
+        <span className="sr-only">Get the booking app on the App Store</span>
+        <StoreBadge
+          kicker="Download on the"
+          name="App Store"
+          icon={
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-6 w-6 fill-current">
+              <path d="M16.4 12.7c0-2.2 1.8-3.3 1.9-3.4-1-1.5-2.6-1.7-3.2-1.7-1.4-.1-2.7.8-3.3.8s-1.7-.8-2.8-.8c-1.5 0-2.8.8-3.6 2.1-1.5 2.7-.4 6.6 1.1 8.8.7 1.1 1.6 2.3 2.7 2.2 1.1 0 1.5-.7 2.8-.7s1.6.7 2.8.7 1.9-1.1 2.6-2.1c.8-1.2 1.2-2.4 1.2-2.5-.1 0-2.2-.9-2.2-3.4M14.2 5.9c.6-.7 1-1.7.9-2.7-.9 0-2 .6-2.6 1.3-.6.6-1.1 1.7-.9 2.7 1 .1 2-.5 2.6-1.3" />
+            </svg>
+          }
+        />
+      </a>
+    </div>
   );
 }
 
@@ -483,11 +770,11 @@ export function CheckList({
   return (
     <ul className={["grid gap-3", className].filter(Boolean).join(" ")}>
       {items.map((item) => (
-        <li key={item} className="flex gap-3 text-base">
+        <li key={item} className="flex gap-3 text-sm leading-relaxed">
           <svg
             aria-hidden="true"
             viewBox="0 0 20 20"
-            className="mt-1 h-5 w-5 shrink-0 fill-accent"
+            className="mt-0.5 h-5 w-5 shrink-0 fill-primary"
           >
             <path d="M7.6 14.3 3.9 10.6l1.4-1.4 2.3 2.3 6.1-6.1 1.4 1.4z" />
           </svg>
@@ -534,6 +821,60 @@ export function MailIcon({ className }: { className?: string }) {
       className={["h-5 w-5 fill-current", className].filter(Boolean).join(" ")}
     >
       <path d="M2.5 5A1.5 1.5 0 0 1 4 3.5h12A1.5 1.5 0 0 1 17.5 5v.4L10 10 2.5 5.4zm0 2.6 7.1 4.3a.8.8 0 0 0 .8 0l7.1-4.3V15A1.5 1.5 0 0 1 16 16.5H4A1.5 1.5 0 0 1 2.5 15z" />
+    </svg>
+  );
+}
+
+export function ShieldIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      className={["h-7 w-7 fill-current", className].filter(Boolean).join(" ")}
+    >
+      <path d="M12 2 4 5v6.5c0 5 3.4 9.4 8 10.5 4.6-1.1 8-5.5 8-10.5V5zm-1 14-4-4 1.4-1.4 2.6 2.6 5.6-5.6L18 9z" />
+    </svg>
+  );
+}
+
+export function ClockIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={["h-7 w-7", className].filter(Boolean).join(" ")}
+    >
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5.2l3.4 2" />
+    </svg>
+  );
+}
+
+export function CarIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      className={["h-7 w-7 fill-current", className].filter(Boolean).join(" ")}
+    >
+      <path d="M5.8 5.3A2 2 0 0 1 7.7 4h8.6a2 2 0 0 1 1.9 1.3L19.8 10H21a1 1 0 0 1 0 2h-.5v6a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6.5v1a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-6H3a1 1 0 0 1 0-2h1.2zM7.9 6l-1.2 4h10.6l-1.2-4zM7 13.2a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4m10 0a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4" />
+    </svg>
+  );
+}
+
+export function PlaneIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      className={["h-7 w-7 fill-current", className].filter(Boolean).join(" ")}
+    >
+      <path d="M21 14.5 13.5 10V4.2a1.5 1.5 0 0 0-3 0V10L3 14.5V16l7.5-2.2v4L8 19.6V21l4-1 4 1v-1.4l-2.5-1.8v-4L21 16z" />
     </svg>
   );
 }

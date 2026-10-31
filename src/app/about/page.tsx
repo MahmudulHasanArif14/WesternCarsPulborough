@@ -92,8 +92,8 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="rounded-sm border border-line bg-surface p-6 shadow-sm">
-            <h2 className="text-lg font-semibold">The essentials</h2>
+          <div className="rounded-lg border border-line bg-surface p-6 shadow-sm">
+            <h2 className="text-lg font-bold">The essentials</h2>
             <dl className="mt-4 grid gap-4">
               {[
                 ["Covering", `All of ${business.region}`],
@@ -119,7 +119,7 @@ export default function AboutPage() {
         </div>
       </Section>
 
-      <Section tint>
+      <Section ground="mist">
         <SectionHead
           eyebrow="HOW WE WORK"
           title="Four things we do not compromise on"
@@ -128,9 +128,9 @@ export default function AboutPage() {
           {values.map((v) => (
             <div
               key={v.title}
-              className="rounded-sm border border-line bg-surface p-6"
+              className="rounded-lg border border-line bg-surface p-6"
             >
-              <h3 className="text-base font-semibold">{v.title}</h3>
+              <h3 className="text-base font-bold">{v.title}</h3>
               <p className="mt-2 text-sm text-muted">{v.body}</p>
             </div>
           ))}
@@ -161,7 +161,7 @@ export default function AboutPage() {
           Delete this whole section once the company's own photos replace them
           and every `credit` in lib/photos.ts is null. */}
       {photoCredits.length > 0 ? (
-        <Section tint>
+        <Section ground="mist">
           <SectionHead
             eyebrow="PHOTOGRAPHY"
             title="About the photographs on this site"
@@ -171,14 +171,14 @@ export default function AboutPage() {
             {photoCredits.map((c) => (
               <li
                 key={c.src}
-                className="rounded-sm border border-line bg-surface px-4 py-3"
+                className="rounded-lg border border-line bg-surface px-4 py-3"
               >
                 {c.author} —{" "}
                 <a
                   href={c.sourceUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="underline transition-colors duration-150 ease-standard hover:text-accent"
+                  className="underline transition-colors duration-150 ease-standard hover:text-primary"
                 >
                   source
                 </a>
@@ -187,7 +187,7 @@ export default function AboutPage() {
                   href={c.licenseUrl}
                   target="_blank"
                   rel="noopener noreferrer license"
-                  className="underline transition-colors duration-150 ease-standard hover:text-accent"
+                  className="underline transition-colors duration-150 ease-standard hover:text-primary"
                 >
                   {c.license}
                 </a>
@@ -198,8 +198,8 @@ export default function AboutPage() {
       ) : null}
 
       <Section>
-        <div className="rounded-sm border border-line bg-surface p-6 shadow-sm md:p-10">
-          <h2 className="text-lg font-bold md:text-xl">
+        <div className="rounded-lg border border-line bg-surface p-6 shadow-sm md:p-10">
+          <h2 className="text-2xl font-bold md:text-3xl">
             Try us on your next journey
           </h2>
           <p className="mt-3 max-w-[620px] text-base text-muted">

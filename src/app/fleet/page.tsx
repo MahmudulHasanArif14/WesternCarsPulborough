@@ -129,7 +129,7 @@ export default function FleetPage() {
           {fleet.map((v) => (
             <article
               key={v.name}
-              className="overflow-hidden rounded-sm border border-line bg-surface transition-[border-color,box-shadow] duration-150 ease-standard hover:border-accent hover:shadow-sm"
+              className="overflow-hidden rounded-lg border border-line bg-surface transition-[border-color,box-shadow] duration-150 ease-standard hover:border-primary hover:shadow-sm"
             >
               <Figure
                 photo={v.photo as PhotoKey}
@@ -138,8 +138,8 @@ export default function FleetPage() {
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
               <div className="p-6">
-              <h2 className="text-lg font-semibold">{v.name}</h2>
-              <p className="mt-1 text-xs font-semibold text-accent">
+              <h2 className="text-lg font-bold">{v.name}</h2>
+              <p className="mt-1 text-xs font-semibold text-primary">
                 {v.capacity}
               </p>
               <p className="mt-4 text-sm text-muted">{v.body}</p>
@@ -153,7 +153,7 @@ export default function FleetPage() {
         </div>
       </Section>
 
-      <Section tint>
+      <Section ground="mist">
         <SectionHead
           eyebrow="EVERY VEHICLE"
           title="What you get whichever car turns up"
@@ -172,8 +172,8 @@ export default function FleetPage() {
       </Section>
 
       <Section>
-        <div className="rounded-sm border border-line bg-surface p-6 shadow-sm md:p-10">
-          <h2 className="text-lg font-bold md:text-xl">
+        <div className="rounded-lg border border-line bg-surface p-6 shadow-sm md:p-10">
+          <h2 className="text-2xl font-bold md:text-3xl">
             Not sure which you need?
           </h2>
           <p className="mt-3 max-w-[620px] text-base text-muted">

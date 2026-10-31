@@ -20,6 +20,16 @@ export function generateStaticParams() {
   return services.map((s) => ({ slug: s.slug }));
 }
 
+/**
+ * Every slug is enumerated above from a static array in lib/business.ts, so
+ * each of these pages is prerendered in full at build time — there is no
+ * request-time data to stream. The whole page is derived from the slug, so a
+ * Suspense boundary would only buy an empty shell plus a skeleton in place of
+ * a page that is already complete. Opting out of instant validation says what
+ * is true: navigation resolves the prerendered page rather than streaming it.
+ */
+export const instant = false;
+
 export async function generateMetadata({
   params,
 }: {
@@ -110,7 +120,7 @@ export default async function ServicePage({
             ))}
 
             {service.alsoKnownAs && service.alsoKnownAs.length > 0 ? (
-              <div className="rounded-sm border border-line bg-[#fafafa] p-6">
+              <div className="rounded-lg border border-line bg-mist/40 p-6">
                 <p className="text-xs font-semibold tracking-[0.08em] text-muted">
                   ALSO ASKED FOR AS
                 </p>
@@ -121,8 +131,8 @@ export default async function ServicePage({
             ) : null}
           </div>
 
-          <aside className="rounded-sm border border-line bg-surface p-6 shadow-sm lg:sticky lg:top-[96px]">
-            <h2 className="text-lg font-semibold">What is included</h2>
+          <aside className="rounded-lg border border-line bg-surface p-6 shadow-sm lg:sticky lg:top-[96px]">
+            <h2 className="text-lg font-bold">What is included</h2>
             <CheckList items={service.includes} className="mt-4" />
             <div className="mt-6 grid gap-3 border-t border-line pt-6">
               <ButtonLink href={business.bookingUrl} size="lg">
@@ -132,14 +142,14 @@ export default async function ServicePage({
               <ButtonLink
                 href={business.phoneHref}
                 size="lg"
-                variant="secondary"
+                variant="outline"
               >
                 <PhoneIcon />
                 {business.phone}
               </ButtonLink>
               <ButtonLink
                 href={business.whatsappHref}
-                variant="ghost"
+                variant="outline"
                 size="lg"
               >
                 <WhatsAppIcon />
@@ -149,7 +159,7 @@ export default async function ServicePage({
                 Answered {business.hours}. Or email{" "}
                 <a
                   href={business.emailHref}
-                  className="font-semibold break-all text-accent underline"
+                  className="font-semibold break-all text-primary underline"
                 >
                   {business.email}
                 </a>
@@ -160,7 +170,7 @@ export default async function ServicePage({
         </div>
       </Section>
 
-      <Section tint>
+      <Section ground="mist">
         <SectionHead
           eyebrow="YOU MIGHT ALSO NEED"
           title="Related services"

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Raleway } from "next/font/google";
+import { CookieBanner } from "@/components/cookie-banner";
 import { SiteHeader } from "@/components/site-header";
 import { MobileContactBar, SiteFooter } from "@/components/site-footer";
 import { business } from "@/lib/business";
@@ -50,7 +51,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#101F3F",
+  themeColor: "#141C34",
 };
 
 export default function RootLayout({
@@ -70,7 +71,7 @@ export default function RootLayout({
         />
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-sm focus:bg-accent-bright focus:px-4 focus:py-3 focus:text-sm focus:font-semibold focus:text-surface"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-sm focus:bg-primary focus:px-4 focus:py-3 focus:text-sm focus:font-semibold focus:text-surface"
         >
           Skip to content
         </a>
@@ -80,6 +81,7 @@ export default function RootLayout({
         </main>
         <SiteFooter />
         <MobileContactBar />
+        <CookieBanner />
       </body>
     </html>
   );

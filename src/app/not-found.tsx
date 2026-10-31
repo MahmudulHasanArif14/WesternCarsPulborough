@@ -11,10 +11,10 @@ export default function NotFound() {
   return (
     <Section>
       <div className="mx-auto max-w-[620px] py-9 text-center">
-        <p className="text-xs font-semibold tracking-[0.08em] text-accent">
+        <p className="text-xs font-semibold tracking-[0.08em] text-primary">
           404
         </p>
-        <h1 className="mt-2 text-xl font-bold md:text-2xl">
+        <h1 className="mt-2 text-3xl font-bold md:text-4xl">
           We could not find that page
         </h1>
         <p className="mt-4 text-base text-muted">
@@ -26,7 +26,7 @@ export default function NotFound() {
             <PhoneIcon />
             {business.phone}
           </ButtonLink>
-          <ButtonLink href="/" size="lg" variant="secondary">
+          <ButtonLink href="/" size="lg" variant="outline">
             Back to the homepage
           </ButtonLink>
         </div>
@@ -34,7 +34,7 @@ export default function NotFound() {
           Or browse{" "}
           <Link
             href="/services"
-            className="font-semibold text-accent underline transition-colors duration-150 ease-standard hover:text-accent-bright"
+            className="font-semibold text-primary underline transition-colors duration-150 ease-standard hover:text-primary"
           >
             all our services
           </Link>

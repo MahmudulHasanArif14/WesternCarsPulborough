@@ -45,19 +45,19 @@ export default function BookPage() {
 
       <Section>
         <div className="grid gap-9 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
-          <div className="rounded-sm border border-line bg-surface p-6 shadow-sm md:p-10">
-            <h2 className="text-lg font-semibold">Your journey</h2>
+          <div className="rounded-lg border border-line bg-surface p-6 shadow-sm md:p-10">
+            <h2 className="text-lg font-bold">Your journey</h2>
             <p className="mt-2 mb-7 text-sm text-muted">
               Fields marked{" "}
-              <span className="font-semibold text-accent">*</span> are required.
+              <span className="font-semibold text-primary">*</span> are required.
               Everything else helps us price it accurately.
             </p>
             <QuoteForm />
           </div>
 
           <aside className="grid gap-6 lg:sticky lg:top-[96px]">
-            <div className="rounded-sm border border-accent bg-[#fafafa] p-6">
-              <h2 className="text-base font-semibold">
+            <div className="rounded-sm border border-primary bg-mist/40 p-6">
+              <h2 className="text-base font-bold">
                 Know the journey? Book it now
               </h2>
               <p className="mt-2 text-sm text-muted">
@@ -71,7 +71,7 @@ export default function BookPage() {
                 </ButtonLink>
                 <ButtonLink
                   href={business.phoneHref}
-                  variant="secondary"
+                  variant="outline"
                   size="lg"
                 >
                   <PhoneIcon />
@@ -79,7 +79,7 @@ export default function BookPage() {
                 </ButtonLink>
                 <ButtonLink
                   href={business.whatsappHref}
-                  variant="ghost"
+                  variant="outline"
                   size="lg"
                 >
                   <WhatsAppIcon />
@@ -92,8 +92,8 @@ export default function BookPage() {
               </p>
             </div>
 
-            <div className="rounded-sm border border-line bg-surface p-6">
-              <h2 className="text-base font-semibold">
+            <div className="rounded-lg border border-line bg-surface p-6">
+              <h2 className="text-base font-bold">
                 What your price includes
               </h2>
               <CheckList
@@ -108,8 +108,8 @@ export default function BookPage() {
               />
             </div>
 
-            <div className="rounded-sm border border-line bg-surface p-6">
-              <h2 className="text-base font-semibold">
+            <div className="rounded-lg border border-line bg-surface p-6">
+              <h2 className="text-base font-bold">
                 Tell us about luggage
               </h2>
               <p className="mt-2 text-sm text-muted">

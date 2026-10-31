@@ -61,7 +61,7 @@ export default function AreasPage() {
             <Link
               key={town.slug}
               href={`/areas/${town.slug}`}
-              className="group flex flex-col overflow-hidden rounded-sm border border-line bg-surface transition-[border-color,box-shadow] duration-150 ease-standard hover:border-accent hover:shadow-sm"
+              className="group flex flex-col overflow-hidden rounded-lg border border-line bg-surface transition-[border-color,box-shadow] duration-150 ease-standard hover:border-primary hover:shadow-sm"
             >
               <Figure
                 photo={town.photo as PhotoKey}
@@ -70,11 +70,11 @@ export default function AreasPage() {
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />
               <div className="flex flex-1 flex-col p-6">
-                <h3 className="text-lg font-semibold">
+                <h3 className="text-lg font-bold">
                   Taxis in {town.name}
                 </h3>
                 <p className="mt-3 flex-1 text-sm text-muted">{town.summary}</p>
-                <span className="mt-6 text-sm font-semibold text-accent">
+                <span className="mt-6 text-sm font-semibold text-primary">
                   {town.name} details
                   <span
                     aria-hidden="true"
@@ -89,7 +89,7 @@ export default function AreasPage() {
         </div>
       </Section>
 
-      <Section tint>
+      <Section ground="mist">
         <SectionHead
           eyebrow="EVERYWHERE ELSE"
           title="And the rest of the county"
@@ -99,7 +99,7 @@ export default function AreasPage() {
           {otherAreas.map((a) => (
             <li
               key={a}
-              className="rounded-sm border border-line bg-surface px-3 py-2 text-sm"
+              className="rounded-lg border border-line bg-surface px-3 py-2 text-sm"
             >
               {a}
             </li>
@@ -115,7 +115,7 @@ export default function AreasPage() {
               {airports.map((a) => (
                 <li
                   key={a}
-                  className="rounded-sm border border-line bg-surface px-4 py-3 text-sm font-medium"
+                  className="rounded-lg border border-line bg-surface px-4 py-3 text-sm font-medium"
                 >
                   {a}
                 </li>
@@ -128,7 +128,7 @@ export default function AreasPage() {
               {ports.map((p) => (
                 <li
                   key={p}
-                  className="rounded-sm border border-line bg-surface px-4 py-3 text-sm font-medium"
+                  className="rounded-lg border border-line bg-surface px-4 py-3 text-sm font-medium"
                 >
                   {p}
                 </li>
@@ -143,7 +143,7 @@ export default function AreasPage() {
         </div>
       </Section>
 
-      <Section tint>
+      <Section ground="mist">
         <div className="grid gap-9 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
           <div>
             <SectionHead
@@ -172,8 +172,8 @@ export default function AreasPage() {
       </Section>
 
       <Section>
-        <div className="rounded-sm border border-line bg-surface p-6 shadow-sm md:p-10">
-          <h2 className="text-lg font-bold md:text-xl">
+        <div className="rounded-lg border border-line bg-surface p-6 shadow-sm md:p-10">
+          <h2 className="text-2xl font-bold md:text-3xl">
             Travelling somewhere unusual?
           </h2>
           <p className="mt-3 max-w-[620px] text-base text-muted">

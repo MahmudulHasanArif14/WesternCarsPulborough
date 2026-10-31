@@ -16,6 +16,8 @@ export const business = {
   whatsappHref: "https://wa.me/447722489859",
   /** Live online booking system (iCabbi web booker). */
   bookingUrl: "https://westerncars.webbooker.icabbi.com/",
+  /** iCabbi app listing — one link that resolves to Play Store or App Store. */
+  appUrl: "https://icab.bi/Western",
 
   /**
    * Positioning: the firm SERVES the whole of West Sussex. Pulborough is in the

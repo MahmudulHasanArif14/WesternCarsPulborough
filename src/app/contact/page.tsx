@@ -81,15 +81,15 @@ export default function ContactPage() {
               {...(external
                 ? { target: "_blank", rel: "noopener noreferrer" }
                 : {})}
-              className="group flex flex-col rounded-sm border border-line bg-surface p-6 transition-[border-color,box-shadow] duration-150 ease-standard hover:border-accent hover:shadow-sm"
+              className="group flex flex-col rounded-lg border border-line bg-surface p-6 transition-[border-color,box-shadow] duration-150 ease-standard hover:border-primary hover:shadow-sm"
             >
-              <span className="flex h-11 w-11 items-center justify-center rounded-sm bg-[#fafafa] text-accent">
+              <span className="flex h-11 w-11 items-center justify-center rounded-sm bg-mist/40 text-primary">
                 <Icon />
               </span>
               <span className="mt-6 text-xs font-semibold tracking-[0.08em] text-muted">
                 {label.toUpperCase()}
               </span>
-              <span className="mt-2 text-lg font-semibold break-words text-ink transition-colors duration-150 ease-standard group-hover:text-accent">
+              <span className="mt-2 text-lg font-bold break-words text-ink transition-colors duration-150 ease-standard group-hover:text-primary">
                 {value}
               </span>
               <span className="mt-4 flex-1 text-sm text-muted">{note}</span>
@@ -101,7 +101,7 @@ export default function ContactPage() {
         </div>
       </Section>
 
-      <Section tint>
+      <Section ground="mist">
         <div className="grid gap-9 lg:grid-cols-2 lg:items-start">
           <div>
             <SectionHead
@@ -127,8 +127,8 @@ export default function ContactPage() {
             </dl>
           </div>
 
-          <div className="rounded-sm border border-line bg-surface p-6 shadow-sm">
-            <h2 className="text-lg font-semibold">
+          <div className="rounded-lg border border-line bg-surface p-6 shadow-sm">
+            <h2 className="text-lg font-bold">
               Booking by phone? Have these ready
             </h2>
             <p className="mt-3 text-sm text-muted">
@@ -146,7 +146,7 @@ export default function ContactPage() {
                 <li key={item} className="flex gap-4">
                   <span
                     aria-hidden="true"
-                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-sm bg-accent-bright text-xs font-bold text-surface"
+                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-sm bg-primary text-xs font-bold text-surface"
                   >
                     {i + 1}
                   </span>
@@ -158,7 +158,7 @@ export default function ContactPage() {
               Would rather write it down?{" "}
               <Link
                 href="/book"
-                className="font-semibold text-accent underline transition-colors duration-150 ease-standard hover:text-accent-bright"
+                className="font-semibold text-primary underline transition-colors duration-150 ease-standard hover:text-primary"
               >
                 Use the quote form
               </Link>{" "}

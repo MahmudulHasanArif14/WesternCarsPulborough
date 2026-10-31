@@ -23,6 +23,9 @@ export function generateStaticParams() {
   return towns.map((t) => ({ slug: t.slug }));
 }
 
+/** See the note in services/[slug]/page.tsx — same reasoning applies here. */
+export const instant = false;
+
 export async function generateMetadata({
   params,
 }: {
@@ -103,8 +106,8 @@ export default async function TownPage({
       <Section>
         <div className="grid gap-9 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
           <div className="grid gap-6">
-            <div className="rounded-sm border border-accent bg-[#fafafa] p-6">
-              <h2 className="text-base font-semibold">
+            <div className="rounded-sm border border-primary bg-mist/40 p-6">
+              <h2 className="text-base font-bold">
                 Do you cover {town.name}?
               </h2>
               <p className="mt-3 text-base">
@@ -114,7 +117,7 @@ export default async function TownPage({
                 accessible vehicles and executive cars. Book online or call{" "}
                 <a
                   href={business.phoneHref}
-                  className="font-semibold text-accent underline"
+                  className="font-semibold text-primary underline"
                 >
                   {business.phone}
                 </a>
@@ -129,14 +132,14 @@ export default async function TownPage({
             ))}
 
             <div>
-              <h2 className="text-lg font-semibold">
+              <h2 className="text-lg font-bold">
                 Also covering, around {town.name}
               </h2>
               <ul className="mt-4 flex flex-wrap gap-2">
                 {town.nearby.map((n) => (
                   <li
                     key={n}
-                    className="rounded-sm border border-line px-3 py-2 text-sm text-muted"
+                    className="rounded-lg border border-line px-3 py-2 text-sm text-muted"
                   >
                     {n}
                   </li>
@@ -145,8 +148,8 @@ export default async function TownPage({
             </div>
           </div>
 
-          <aside className="rounded-sm border border-line bg-surface p-6 shadow-sm lg:sticky lg:top-[96px]">
-            <h2 className="text-lg font-semibold">
+          <aside className="rounded-lg border border-line bg-surface p-6 shadow-sm lg:sticky lg:top-[96px]">
+            <h2 className="text-lg font-bold">
               From {town.name}, typically
             </h2>
             <ul className="mt-4 grid gap-3">
@@ -173,13 +176,13 @@ export default async function TownPage({
                 phoneHref={business.phoneHref}
               />
               <p className="mt-4 flex items-start gap-2 text-xs text-muted">
-                <WhatsAppIcon className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                <WhatsAppIcon className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                 Or WhatsApp{" "}
                 <a
                   href={business.whatsappHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-semibold text-accent underline"
+                  className="font-semibold text-primary underline"
                 >
                   {business.whatsapp}
                 </a>
@@ -189,7 +192,7 @@ export default async function TownPage({
         </div>
       </Section>
 
-      <Section tint>
+      <Section ground="mist">
         <SectionHead
           eyebrow={`SERVICES IN ${town.name.toUpperCase()}`}
           title={`What we do in ${town.name}`}
@@ -230,14 +233,14 @@ export default async function TownPage({
             {faqs.map((f) => (
               <details
                 key={f.q}
-                className="group rounded-sm border border-line bg-surface p-6 transition-[border-color] duration-150 ease-standard hover:border-accent"
+                className="group rounded-lg border border-line bg-surface p-6 transition-[border-color] duration-150 ease-standard hover:border-primary"
               >
-                <summary className="cursor-pointer list-none text-base font-semibold marker:content-none">
+                <summary className="cursor-pointer list-none text-base font-bold marker:content-none">
                   <span className="flex items-start justify-between gap-4">
                     {f.q}
                     <span
                       aria-hidden="true"
-                      className="mt-1 shrink-0 text-accent transition-transform duration-150 ease-standard group-open:rotate-45"
+                      className="mt-1 shrink-0 text-primary transition-transform duration-150 ease-standard group-open:rotate-45"
                     >
                       +
                     </span>
@@ -250,7 +253,7 @@ export default async function TownPage({
         </div>
       </Section>
 
-      <Section tint>
+      <Section ground="mist">
         <SectionHead
           eyebrow="NEARBY"
           title="Other towns we cover"
@@ -261,7 +264,7 @@ export default async function TownPage({
             <li key={t.slug}>
               <Link
                 href={`/areas/${t.slug}`}
-                className="block rounded-sm border border-line bg-surface px-4 py-3 text-base font-medium transition-colors duration-150 ease-standard hover:border-accent hover:text-accent"
+                className="block rounded-lg border border-line bg-surface px-4 py-3 text-base font-medium transition-colors duration-150 ease-standard hover:border-primary hover:text-primary"
               >
                 Taxis in {t.name}
               </Link>
@@ -271,7 +274,7 @@ export default async function TownPage({
         <div className="mt-8">
           <Link
             href="/areas"
-            className="rounded-sm text-sm font-semibold text-accent underline transition-colors duration-150 ease-standard hover:text-accent-bright"
+            className="rounded-sm text-sm font-semibold text-primary underline transition-colors duration-150 ease-standard hover:text-primary"
           >
             See the full coverage area
           </Link>

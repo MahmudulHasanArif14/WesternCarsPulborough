@@ -4,23 +4,64 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { business, services } from "@/lib/business";
-import { ButtonLink, PhoneIcon } from "./ui";
+import { business, services, towns } from "@/lib/business";
+import { ButtonLink } from "./ui";
 
-const nav = [
-  { href: "/services", label: "Services" },
+/* ─────────────────────────────────────────────────────────────
+   SiteHeader
+   Anatomy: primary call bar → white bar (logo · nav · Book Online ·
+   hamburger) → mobile panel.
+   Desktop dropdowns open on hover and on focus-within, so they are
+   reachable by keyboard without JavaScript state.
+   ───────────────────────────────────────────────────────────── */
+
+const serviceLinks = services.map((s) => ({
+  href: `/services/${s.slug}`,
+  label: s.name,
+}));
+
+const areaLinks = towns.map((t) => ({
+  href: `/areas/${t.slug}`,
+  label: `${t.name} Taxis`,
+}));
+
+type NavItem =
+  | { href: string; label: string; children?: undefined }
+  | { label: string; href: string; children: { href: string; label: string }[] };
+
+const nav: NavItem[] = [
+  { href: "/", label: "Home" },
+  { href: "/services", label: "Services", children: serviceLinks },
   { href: "/fleet", label: "Fleet" },
-  { href: "/areas", label: "Areas" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
+  { href: "/areas", label: "Areas", children: areaLinks },
+  { href: "/about", label: "About Us" },
+  { href: "/contact", label: "Contact Us" },
 ];
+
+function ChevronDown({ className }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={["h-4 w-4", className].filter(Boolean).join(" ")}
+    >
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  );
+}
 
 export function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [expanded, setExpanded] = useState<string | null>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
-  // Escape closes and returns focus to the toggle.
+  // Escape closes the panel and returns focus to the toggle.
   useEffect(() => {
     if (!open) return;
     function onKey(e: KeyboardEvent) {
@@ -42,85 +83,136 @@ export function SiteHeader() {
   }, [open]);
 
   const isActive = (href: string) =>
-    pathname === href || pathname.startsWith(href + "/");
+    href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-surface/95 backdrop-blur-sm">
-      <div className="container-page flex h-[72px] items-center justify-between gap-4">
-        <Link
-          href="/"
-          className="flex shrink-0 items-center gap-3 rounded-sm"
-          aria-label={`${business.name} — home`}
-        >
-          <Image src="/logo.png" alt="" width={44} height={44} priority />
-          <span className="flex flex-col leading-none">
-            <span className="text-lg font-bold tracking-tight">
-              Western Cars
-            </span>
-            <span className="mt-1 hidden text-xs font-semibold text-muted sm:inline">
-              {business.tagline} · {business.region}
-            </span>
-          </span>
-        </Link>
+    <header className="sticky top-0 z-50">
+      {/* ── Call bar ───────────────────────────────────────── */}
+      <div className="bg-primary">
+        <div className="container-page py-2 text-right text-sm font-medium text-surface">
+          <span className="hidden sm:inline">Call Us 24/7 : </span>
+          <a
+            href={business.phoneHref}
+            className="rounded-sm font-semibold transition-opacity duration-150 ease-standard hover:opacity-80"
+          >
+            <span className="sm:hidden">Call 24/7: </span>
+            {business.phone}
+          </a>
+        </div>
+      </div>
 
-        <nav aria-label="Main" className="hidden lg:block">
-          <ul className="flex items-center gap-6">
-            {nav.map((item) => (
-              <li key={item.href}>
+      {/* ── Main bar ───────────────────────────────────────── */}
+      <div className="border-b border-line bg-surface">
+        <div className="container-page flex h-20 items-center justify-between gap-4">
+          <Link
+            href="/"
+            className="flex shrink-0 items-center gap-3 rounded-sm"
+            aria-label={`${business.name} — home`}
+          >
+            <Image
+              src="/logo.png"
+              alt=""
+              width={48}
+              height={48}
+              priority
+              className="h-12 w-12 object-contain"
+            />
+            <span className="flex flex-col leading-none">
+              <span className="text-lg font-bold tracking-tight">
+                Western Cars
+              </span>
+              <span className="mt-1 hidden text-xs font-semibold tracking-wide text-muted uppercase sm:inline">
+                {business.base} · {business.tagline}
+              </span>
+            </span>
+          </Link>
+
+          <nav
+            aria-label="Main navigation"
+            className="hidden items-center gap-1 lg:flex"
+          >
+            {nav.map((item) =>
+              item.children ? (
+                <div key={item.label} className="group relative">
+                  <Link
+                    href={item.href}
+                    aria-current={isActive(item.href) ? "page" : undefined}
+                    className={[
+                      "flex items-center gap-1 rounded-sm px-3 py-2 text-sm font-semibold transition-colors duration-150 ease-standard hover:text-primary",
+                      isActive(item.href) ? "text-primary" : "text-ink",
+                    ].join(" ")}
+                  >
+                    {item.label}
+                    <ChevronDown className="transition-transform duration-150 ease-standard group-hover:rotate-180" />
+                  </Link>
+                  <div className="invisible absolute top-full left-0 z-50 max-h-[70vh] min-w-[260px] overflow-y-auto rounded-b-lg border border-line bg-surface py-1 opacity-0 shadow-lg transition-opacity duration-150 ease-standard group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                    {item.children.map((c) => (
+                      <Link
+                        key={c.href}
+                        href={c.href}
+                        className="block px-4 py-2 text-sm text-ink transition-colors duration-150 ease-standard hover:bg-mist/50 hover:text-primary"
+                      >
+                        {c.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ) : (
                 <Link
+                  key={item.href}
                   href={item.href}
                   aria-current={isActive(item.href) ? "page" : undefined}
                   className={[
-                    "rounded-sm text-sm font-medium transition-colors duration-150 ease-standard hover:text-accent",
-                    isActive(item.href) ? "text-accent" : "text-ink",
+                    "rounded-sm px-3 py-2 text-sm font-semibold transition-colors duration-150 ease-standard hover:text-primary",
+                    isActive(item.href) ? "text-primary" : "text-ink",
                   ].join(" ")}
                 >
                   {item.label}
                 </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+              ),
+            )}
+          </nav>
 
-        <div className="flex items-center gap-3">
-          <a
-            href={business.phoneHref}
-            className="hidden items-center gap-2 rounded-sm text-sm font-semibold text-ink transition-colors duration-150 ease-standard hover:text-accent md:flex"
-          >
-            <PhoneIcon />
-            {business.phone}
-          </a>
-          <ButtonLink
-            href={business.bookingUrl}
-            className="hidden sm:inline-flex"
-          >
-            Book online
-          </ButtonLink>
-
-          <button
-            ref={toggleRef}
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            aria-expanded={open}
-            aria-controls="mobile-nav"
-            className="flex h-11 w-11 items-center justify-center rounded-sm border border-line text-ink transition-colors duration-150 ease-standard hover:border-accent hover:text-accent lg:hidden"
-          >
-            <span className="sr-only">{open ? "Close menu" : "Open menu"}</span>
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 20 20"
-              className="h-5 w-5 fill-current"
+          <div className="flex items-center gap-3">
+            <ButtonLink
+              href={business.bookingUrl}
+              className="hidden sm:inline-flex"
             >
-              {open ? (
-                <path d="M5.3 4 4 5.3 8.7 10 4 14.7 5.3 16 10 11.3 14.7 16 16 14.7 11.3 10 16 5.3 14.7 4 10 8.7z" />
-              ) : (
-                <path d="M3 5h14v1.6H3zm0 4.2h14v1.6H3zm0 4.2h14V15H3z" />
-              )}
-            </svg>
-          </button>
+              Book Online
+            </ButtonLink>
+
+            <button
+              ref={toggleRef}
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              aria-expanded={open}
+              aria-controls="mobile-nav"
+              className="flex h-11 w-11 items-center justify-center rounded-btn border border-line text-ink transition-colors duration-150 ease-standard hover:border-primary hover:text-primary lg:hidden"
+            >
+              <span className="sr-only">
+                {open ? "Close menu" : "Open menu"}
+              </span>
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                className="h-5 w-5"
+              >
+                {open ? (
+                  <path d="M18 6 6 18M6 6l12 12" />
+                ) : (
+                  <path d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
+      {/* ── Mobile panel ───────────────────────────────────── */}
       {open ? (
         <div
           id="mobile-nav"
@@ -128,47 +220,83 @@ export function SiteHeader() {
             // Any link tapped inside the panel dismisses it.
             if ((e.target as HTMLElement).closest("a")) setOpen(false);
           }}
-          className="border-t border-line bg-surface lg:hidden"
+          className="border-b border-line bg-surface lg:hidden"
         >
           <nav
-            aria-label="Mobile"
-            className="container-page max-h-[calc(100dvh-72px)] overflow-y-auto py-6"
+            aria-label="Mobile navigation"
+            className="container-page max-h-[calc(100dvh-136px)] overflow-y-auto py-4"
           >
-            <ul className="grid gap-1">
-              {nav.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    aria-current={isActive(item.href) ? "page" : undefined}
-                    className={[
-                      "block rounded-sm px-3 py-3 text-base font-semibold transition-colors duration-150 ease-standard hover:bg-[#fafafa]",
-                      isActive(item.href) ? "text-accent" : "text-ink",
-                    ].join(" ")}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
+            <ul>
+              {nav.map((item) =>
+                item.children ? (
+                  <li key={item.label} className="border-b border-line/60">
+                    <div className="flex items-center justify-between">
+                      <Link
+                        href={item.href}
+                        className="flex-1 py-3 text-sm font-semibold text-ink transition-colors duration-150 ease-standard hover:text-primary"
+                      >
+                        {item.label}
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setExpanded((v) =>
+                            v === item.label ? null : item.label,
+                          )
+                        }
+                        aria-expanded={expanded === item.label}
+                        className="flex h-11 w-11 items-center justify-center rounded-sm text-muted transition-colors duration-150 ease-standard hover:text-primary"
+                      >
+                        <span className="sr-only">
+                          {expanded === item.label ? "Collapse" : "Expand"}{" "}
+                          {item.label}
+                        </span>
+                        <ChevronDown
+                          className={[
+                            "transition-transform duration-150 ease-standard",
+                            expanded === item.label ? "rotate-180" : "",
+                          ].join(" ")}
+                        />
+                      </button>
+                    </div>
+                    {expanded === item.label ? (
+                      <ul className="pb-2">
+                        {item.children.map((c) => (
+                          <li key={c.href}>
+                            <Link
+                              href={c.href}
+                              className="block border-b border-line/50 px-4 py-2 text-sm text-muted transition-colors duration-150 ease-standard hover:text-primary"
+                            >
+                              {c.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+                  </li>
+                ) : (
+                  <li key={item.href} className="border-b border-line/60">
+                    <Link
+                      href={item.href}
+                      aria-current={isActive(item.href) ? "page" : undefined}
+                      className={[
+                        "block py-3 text-sm font-semibold transition-colors duration-150 ease-standard hover:text-primary",
+                        isActive(item.href) ? "text-primary" : "text-ink",
+                      ].join(" ")}
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                ),
+              )}
             </ul>
 
-            <p className="mt-6 mb-2 px-3 text-xs font-semibold tracking-[0.08em] text-muted">
-              ALL SERVICES
-            </p>
-            <ul className="grid gap-1 pb-4">
-              {services.map((s) => (
-                <li key={s.slug}>
-                  <Link
-                    href={`/services/${s.slug}`}
-                    className="block rounded-sm px-3 py-2 text-sm text-muted transition-colors duration-150 ease-standard hover:bg-[#fafafa] hover:text-accent"
-                  >
-                    {s.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-
-            <ButtonLink href={business.bookingUrl} size="lg" className="w-full">
-              Book online
+            <ButtonLink
+              href={business.bookingUrl}
+              size="lg"
+              className="mt-5 w-full"
+            >
+              Book Online
             </ButtonLink>
           </nav>
         </div>

@@ -5,9 +5,9 @@ import { business, services } from "@/lib/business";
 import { Button, ButtonLink, WhatsAppIcon } from "./ui";
 
 const field =
-  "w-full rounded-sm border border-line bg-surface px-4 py-3 text-base text-ink " +
+  "w-full rounded-lg border border-line bg-surface px-4 py-3 text-base text-ink " +
   "placeholder:text-muted transition-colors duration-150 ease-standard " +
-  "hover:border-accent focus:border-accent focus-visible:outline-2 " +
+  "hover:border-primary focus:border-primary focus-visible:outline-2 " +
   "aria-[invalid=true]:border-[#b3261e] disabled:opacity-50";
 
 const label = "block text-sm font-semibold text-ink";
@@ -118,16 +118,16 @@ export function QuoteForm() {
     return (
       <div
         role="status"
-        className="rounded-sm border border-accent bg-surface p-6 shadow-sm"
+        className="rounded-sm border border-primary bg-surface p-6 shadow-sm"
       >
-        <h3 className="text-lg font-semibold">Your request is on its way</h3>
+        <h3 className="text-lg font-bold">Your request is on its way</h3>
         <p className="mt-3 text-base text-muted">
           We have opened WhatsApp with your details filled in — press send and
           we will come back to you with a fixed price. If WhatsApp did not
           open, call us on{" "}
           <a
             href={business.phoneHref}
-            className="font-semibold text-accent underline"
+            className="font-semibold text-primary underline"
           >
             {business.phone}
           </a>
@@ -138,7 +138,7 @@ export function QuoteForm() {
             Call {business.phone}
           </ButtonLink>
           <Button
-            variant="ghost"
+            variant="outline"
             onClick={() => {
               setValues(empty);
               setState("idle");
@@ -317,7 +317,7 @@ export function QuoteForm() {
           Or call{" "}
           <a
             href={business.phoneHref}
-            className="font-semibold text-accent underline"
+            className="font-semibold text-primary underline"
           >
             {business.phone}
           </a>{" "}
@@ -326,7 +326,7 @@ export function QuoteForm() {
       </div>
 
       <p className="flex items-start gap-2 text-xs text-muted">
-        <WhatsAppIcon className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+        <WhatsAppIcon className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
         Submitting opens WhatsApp with your details ready to send, so you keep a
         copy of the conversation.
       </p>
@@ -366,7 +366,7 @@ function Field({
       <label className={label} htmlFor={fieldId}>
         {labelText}
         {required ? (
-          <span className="ml-1 text-accent" aria-hidden="true">
+          <span className="ml-1 text-primary" aria-hidden="true">
             *
           </span>
         ) : (
